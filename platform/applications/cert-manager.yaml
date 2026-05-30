@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.15.3
+    helm:
+      releaseName: cert-manager
+      values: |
+        installCRDs: true
+        serviceAccount:
+          annotations:
+            iam.gke.io/gcp-service-account: inenpt-group-h-cert-manager@project-a7033755-91ce-4662-bb8.iam.gserviceaccount.com
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

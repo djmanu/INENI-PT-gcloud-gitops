@@ -1,0 +1,56 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  yaml:
+    name: YAML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: YAML lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .github platform tenants
+          config_data: |
+            extends: default
+            rules:
+              line-length: disable
+              truthy: disable
+
+  kustomize:
+    name: Kustomize
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Validate platform kustomization
+        run: kubectl kustomize platform > /dev/null
+
+      - name: Validate platform config kustomization
+        run: kubectl kustomize platform/config > /dev/null
+
+      - name: Validate Crossplane providers kustomization
+        run: kubectl kustomize platform/crossplane-providers > /dev/null
+
+      - name: Validate Crossplane config kustomization
+        run: kubectl kustomize platform/crossplane-config > /dev/null
+
+      - name: Validate tenant API kustomization
+        run: kubectl kustomize platform/tenant-api > /dev/null
+
+      - name: Validate tenants kustomization
+        run: kubectl kustomize tenants > /dev/null
