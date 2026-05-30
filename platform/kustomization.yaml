@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - applications/ingress-nginx.yaml
+  - applications/cert-manager.yaml
+  - applications/external-dns.yaml
+  - applications/external-secrets.yaml
+  - applications/crossplane.yaml
+  - applications/cloudnative-pg.yaml
+  - applications/crossplane-providers.yaml
+  - applications/platform-config.yaml
+  - applications/crossplane-config.yaml
+  - applications/crossplane-tenant-api.yaml
+  - applications/tenants.yaml
